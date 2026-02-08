@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/_/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/examples/">
+    <Project Path="examples/Perplexity.Examples.Console/Perplexity.Examples.Console.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Perplexity/Perplexity.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Perplexity.Tests/Perplexity.Tests.csproj" />
+  </Folder>
+</Solution>
