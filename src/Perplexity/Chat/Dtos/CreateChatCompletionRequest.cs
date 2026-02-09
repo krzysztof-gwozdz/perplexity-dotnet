@@ -9,5 +9,5 @@ public record CreateChatCompletionRequest
     public string Model { get; init; }
 
     [JsonPropertyName("messages")]
-    public IReadOnlyList<ChatCompletionMessage> Messages { get; init; }
+    public IReadOnlyList<Message> Messages { get; init; }
 }

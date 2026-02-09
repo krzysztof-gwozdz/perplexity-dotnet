@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Perplexity.Chat.Dtos;
 
-public record ChatCompletionMessage
+public record Message
 {
     [JsonPropertyName("role")]
     public string Role { get; init; }

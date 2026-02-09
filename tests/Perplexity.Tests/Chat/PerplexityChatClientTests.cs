@@ -5,24 +5,31 @@ namespace Perplexity.Tests.Chat;
 
 public class PerplexityChatClientTests
 {
+    private const string Model = "sonar";
+
     private readonly string _apiKey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY")
                                       ?? throw new PerplexityMissingApiKeyException();
 
     [Fact]
-    public async Task CompleteChat_WithOnltRequiredData_ReturnsValidResponse()
+    public async Task CompleteChat_WithOnltRequiredData_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
         var chatClient = perplexityClient.ChatClient;
         var request = new CreateChatCompletionRequest
         {
-            Model = "sonar",
+            Model = Model,
             Messages =
             [
-                new ChatCompletionMessage
+                new Message
+                {
+                    Role = "system",
+                    Content = "Response with pong for ping request"
+                },
+                new Message
                 {
                     Role = "user",
-                    Content = "Hi"
+                    Content = "ping"
                 }
             ]
         };
@@ -32,13 +39,22 @@ public class PerplexityChatClientTests
 
         // assert
         Assert.NotNull(response);
+        Assert.NotNull(response.Id);
+        Assert.Equal(Model, response.Model);
+        Assert.NotNull(response.Created);
         Assert.NotNull(response.Choices);
         Assert.Single(response.Choices);
         var choice = response.Choices[0];
         Assert.NotNull(choice);
         Assert.NotNull(choice.Message);
         Assert.Equal("assistant", choice.Message.Role);
-        Assert.Single(request.Messages);
-        Assert.NotEmpty(request.Messages[0].Content);
+        Assert.NotNull(response.Usage);
+        Assert.NotNull(response.Usage.PromptTokens);
+        Assert.NotNull(response.Usage.CompletionTokens);
+        Assert.NotNull(response.Usage.TotalTokens);
+        Assert.NotNull(response.Usage.Cost);
+        Assert.NotNull(response.Usage.Cost.InputTokensCost);
+        Assert.NotNull(response.Usage.Cost.OutputTokensCost);
+        Assert.NotNull(response.Usage.Cost.TotalCost);
     }
 }
