@@ -1,0 +1,13 @@
+#nullable disable
+using System.Text.Json.Serialization;
+
+namespace Perplexity.Chat.Dtos;
+
+public record CreateChatCompletionRequest
+{
+    [JsonPropertyName("model")]
+    public string Model { get; init; }
+
+    [JsonPropertyName("messages")]
+    public IReadOnlyList<ChatCompletionMessage> Messages { get; init; }
+}
