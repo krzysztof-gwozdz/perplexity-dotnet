@@ -5,7 +5,13 @@ namespace Perplexity;
 
 public abstract class BaseClient(HttpClient httpClient)
 {
-    protected async Task<TResponse> Post<TRequest, TResponse>(string requestUri, TRequest value, CancellationToken cancellationToken) where TResponse : class
+    protected async Task Post<TRequest>(string requestUri, TRequest value, CancellationToken cancellationToken)
+    {
+        var response = await httpClient.PostAsJsonAsync(requestUri, value, cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+    
+    protected async Task<TResponse> Post<TRequest, TResponse>(string requestUri, TRequest value, CancellationToken cancellationToken)
     {
         var response = await httpClient.PostAsJsonAsync(requestUri, value, cancellationToken: cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -13,7 +19,7 @@ public abstract class BaseClient(HttpClient httpClient)
         return ParseResponse<TResponse>(content);
     }
 
-    private static TResponse ParseResponse<TResponse>(string content) where TResponse : class =>
+    private static TResponse ParseResponse<TResponse>(string content) =>
         JsonSerializer.Deserialize<TResponse>(content)
         ?? throw new JsonException($"Failed to deserialize response to {typeof(TResponse).Name}");
 }

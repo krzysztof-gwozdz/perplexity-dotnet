@@ -4,11 +4,9 @@ namespace Perplexity.Search;
 
 public class PerplexitySearchClient(HttpClient httpClient) : BaseClient(httpClient)
 {
-    private const string Url = "/search";
-
     public async Task<SearchResponse> Search(SearchRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await Post<SearchRequest, SearchResponse>(Url, request, cancellationToken);
+        var response = await Post<SearchRequest, SearchResponse>("/search", request, cancellationToken);
         return response;
     }
 }
