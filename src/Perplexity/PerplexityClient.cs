@@ -1,4 +1,5 @@
 ﻿using Perplexity.Chat;
+using Perplexity.Search;
 
 namespace Perplexity;
 
@@ -16,4 +17,6 @@ public class PerplexityClient
     }
     
     public PerplexityChatClient ChatClient => new(_httpClient);
+
+    public PerplexitySearchClient SearchClient => new(_httpClient);
 }
