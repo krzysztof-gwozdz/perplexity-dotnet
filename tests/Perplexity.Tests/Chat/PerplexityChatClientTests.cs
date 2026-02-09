@@ -11,7 +11,7 @@ public class PerplexityChatClientTests
                                       ?? throw new PerplexityMissingApiKeyException();
 
     [Fact]
-    public async Task CompleteChat_WithOnltRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task CreateChatCompletion_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
@@ -21,16 +21,8 @@ public class PerplexityChatClientTests
             Model = Model,
             Messages =
             [
-                new Message
-                {
-                    Role = "system",
-                    Content = "Response with pong for ping request"
-                },
-                new Message
-                {
-                    Role = "user",
-                    Content = "ping"
-                }
+                Message.CreateSystemMessage("Response with pong for ping request"),
+                Message.CreateUserMessage("ping")
             ]
         };
 

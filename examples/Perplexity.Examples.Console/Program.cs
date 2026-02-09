@@ -11,7 +11,7 @@ var request = new CreateChatCompletionRequest
     Model = "sonar",
     Messages =
     [
-        new Message { Role = "user", Content = "Hello, how are you?" }
+        Message.CreateUserMessage("Hello, how are you?")
     ]
 };
 var response = await chatClient.CreateChatCompletion(request);
