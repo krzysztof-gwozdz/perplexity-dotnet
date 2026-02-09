@@ -18,7 +18,7 @@ public record CreateChatCompletionResponse
     public IReadOnlyList<Choice> Choices { get; init; }
 
     [JsonPropertyName("usage")]
-    public UsageInfo Usage { get; init; }
+    public Usage Usage { get; init; }
 
     [JsonPropertyName("object")]
     public string Object { get; init; }

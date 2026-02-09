@@ -1,4 +1,5 @@
-﻿using Perplexity.Authentication;
+﻿using Perplexity.AgenticResearch;
+using Perplexity.Authentication;
 using Perplexity.Chat;
 using Perplexity.Search;
 
@@ -17,6 +18,8 @@ public class PerplexityClient
         _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
     }
     
+    public PerplexityAgenticResearchClient AgenticResearchClient => new(_httpClient);
+
     public PerplexityAuthenticationClient AuthenticationClient => new(_httpClient);
 
     public PerplexityChatClient ChatClient => new(_httpClient);

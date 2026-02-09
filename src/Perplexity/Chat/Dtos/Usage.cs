@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Perplexity.Chat.Dtos;
 
-public record UsageInfo
+public record Usage
 {
     [JsonPropertyName("prompt_tokens")]
     public int? PromptTokens { get; init; }
