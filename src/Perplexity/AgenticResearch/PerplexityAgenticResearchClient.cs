@@ -1,4 +1,5 @@
 ﻿using Perplexity.AgenticResearch.Dtos;
+using Perplexity.Common;
 
 namespace Perplexity.AgenticResearch;
 

@@ -1,4 +1,5 @@
 ﻿using Perplexity.Chat.Dtos;
+using Perplexity.Common;
 
 namespace Perplexity.Chat;
 

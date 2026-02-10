@@ -1,9 +1,10 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Perplexity.Common.Dtos;
 using Perplexity.Exceptions;
 
-namespace Perplexity;
+namespace Perplexity.Common;
 
 public abstract class BaseClient(HttpClient httpClient)
 {
@@ -18,7 +19,7 @@ public abstract class BaseClient(HttpClient httpClient)
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+            ThrowOnError(response, content);
         }
         return ParseResponse<TResponse>(content);
     }
@@ -29,7 +30,7 @@ public abstract class BaseClient(HttpClient httpClient)
         if (!response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+            ThrowOnError(response, content);
         }
     }
 
@@ -39,9 +40,22 @@ public abstract class BaseClient(HttpClient httpClient)
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+            ThrowOnError(response, content);
         }
         return ParseResponse<TResponse>(content);
+    }
+
+    private static void ThrowOnError(HttpResponseMessage response, string content)
+    {
+        try
+        {
+            var errorResponse = ParseResponse<ErrorResponse>(content);
+            throw new PerplexityClientException(response.StatusCode, response.Headers, content, errorResponse);
+        }
+        catch (Exception ex) when (ex is not PerplexityClientException)
+        {
+            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+        }
     }
 
     private static TResponse ParseResponse<TResponse>(string content) =>

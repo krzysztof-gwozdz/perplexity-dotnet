@@ -1,4 +1,5 @@
-﻿using Perplexity.AgenticResearch.Dtos;
+﻿using System.Net;
+using Perplexity.AgenticResearch.Dtos;
 using Perplexity.Exceptions;
 
 namespace Perplexity.Tests.AgenticResearch;
@@ -32,5 +33,32 @@ public class PerplexityAgenticResearchClientTests
         Assert.NotNull(response.Object);
         Assert.NotNull(response.Output);
         Assert.NotNull(response.Status);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task Search_WithInvalidInput_ThrowsException(string? input)
+    {
+        // arrange
+        var perplexityClient = new PerplexityClient(_apiKey);
+        var agenticResearchClient = perplexityClient.AgenticResearchClient;
+        var request = new AgenticResearchRequest
+        {
+            Input = input,
+            Model = Model
+        };
+
+        // act
+        var createResponse = async () => await agenticResearchClient.CreateResponse(request);
+
+        // assert
+        var exception = await Assert.ThrowsAsync<PerplexityClientException>(createResponse);
+        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
+        Assert.NotNull(exception.Content);
+        Assert.NotNull(exception.Error);
+        Assert.Equal(400, exception.Error.Code);
+        Assert.NotEmpty(exception.Error.Type);
+        Assert.NotEmpty(exception.Error.Message);
     }
 }

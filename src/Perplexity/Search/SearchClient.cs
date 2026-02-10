@@ -1,4 +1,5 @@
-﻿using Perplexity.Search.Dtos;
+﻿using Perplexity.Common;
+using Perplexity.Search.Dtos;
 
 namespace Perplexity.Search;
 

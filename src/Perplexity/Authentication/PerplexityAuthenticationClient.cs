@@ -1,4 +1,5 @@
 ﻿using Perplexity.Authentication.Dtos;
+using Perplexity.Common;
 
 namespace Perplexity.Authentication;
 
