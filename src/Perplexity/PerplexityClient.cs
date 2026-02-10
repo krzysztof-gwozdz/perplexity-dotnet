@@ -5,17 +5,30 @@ using Perplexity.Search;
 
 namespace Perplexity;
 
-public class PerplexityClient(HttpClient httpClient, string apiKey)
+public class PerplexityClient
 {
+    private readonly HttpClient _httpClient;
+    private readonly string _apiKey;
+    
+    public PerplexityClient() : this(PerplexityMissingApiKey.Value)
+    {
+    }
+    
     public PerplexityClient(string apiKey) : this(new HttpClient(), apiKey)
     {
     }
     
-    public PerplexityAgenticResearchClient AgenticResearchClient => new(httpClient, apiKey);
-
-    public PerplexityAuthenticationClient AuthenticationClient => new(httpClient, apiKey);
-
-    public PerplexityChatClient ChatClient => new(httpClient, apiKey);
+    public PerplexityClient(HttpClient httpClient, string apiKey)
+    {
+        _httpClient = httpClient;
+        _apiKey = apiKey;
+    }
     
-    public PerplexitySearchClient SearchClient => new(httpClient, apiKey);
+    public PerplexityAgenticResearchClient AgenticResearchClient => new(_httpClient, _apiKey);
+
+    public PerplexityAuthenticationClient AuthenticationClient => new(_httpClient, _apiKey);
+
+    public PerplexityChatClient ChatClient => new(_httpClient, _apiKey);
+    
+    public PerplexitySearchClient SearchClient => new(_httpClient, _apiKey);
 }

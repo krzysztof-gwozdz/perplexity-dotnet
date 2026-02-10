@@ -9,8 +9,8 @@ namespace Perplexity.Common;
 public abstract class BaseClient
 {
     private readonly HttpClient _httpClient;
-    
-    public BaseClient(HttpClient httpClient, string apiKey)
+
+    protected BaseClient(HttpClient httpClient, string apiKey)
     {
         _httpClient = httpClient;
         _httpClient.BaseAddress = new("https://api.perplexity.ai");

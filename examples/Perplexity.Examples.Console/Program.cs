@@ -1,11 +1,9 @@
 ﻿using Perplexity;
 using Perplexity.Chat.Dtos;
-using Perplexity.Exceptions;
 
 Console.WriteLine("Perplexity Console Example");
 Console.WriteLine();
-var apikey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY") ?? throw new PerplexityMissingApiKeyException();
-var perplexityClient = new PerplexityClient(apikey);
+var perplexityClient = new PerplexityClient();
 var chatClient = perplexityClient.ChatClient;
 var request = new CreateChatCompletionRequest
 {

@@ -6,14 +6,11 @@ namespace Perplexity.Tests.Chat;
 
 public class PerplexityChatClientTests
 {
-    private readonly string _apiKey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY")
-                                      ?? throw new PerplexityMissingApiKeyException();
-
     [Fact]
     public async Task CreateChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var request = new CreateChatCompletionRequest
         {
@@ -55,7 +52,7 @@ public class PerplexityChatClientTests
     public async Task CreateChatCompletion_WithInvalidModelData_ThrowsException(string? model)
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var request = new CreateChatCompletionRequest
         {
@@ -84,7 +81,7 @@ public class PerplexityChatClientTests
     public async Task CreateAsyncChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var request = new CreateAsyncChatCompletionRequest
         {
@@ -112,7 +109,7 @@ public class PerplexityChatClientTests
     public async Task CreateAsyncChatCompletion_WithInvalidModelData_ThrowsException(string? model)
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var request = new CreateAsyncChatCompletionRequest
         {
@@ -141,7 +138,7 @@ public class PerplexityChatClientTests
     public async Task ListAsyncChatCompletions_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
 
         // act
@@ -162,7 +159,7 @@ public class PerplexityChatClientTests
     public async Task GetAsyncChatCompletions_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var asyncChatCompletions = await chatClient.ListAsyncChatCompletions();
         var @params = new GetAsyncChatCompletionParams
@@ -191,7 +188,7 @@ public class PerplexityChatClientTests
     public async Task GetAsyncChatCompletions_WithNonexistentChatCompetition_ThrowsException()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var chatClient = perplexityClient.ChatClient;
         var @params = new GetAsyncChatCompletionParams
         {

@@ -6,14 +6,11 @@ namespace Perplexity.Tests.Search;
 
 public class PerplexitySearchClientTests
 {
-    private readonly string _apiKey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY")
-                                      ?? throw new PerplexityMissingApiKeyException();
-
     [Fact]
     public async Task Search_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var searchClient = perplexityClient.SearchClient;
         var request = new SearchRequest { Query = "Funny cat images" };
 
@@ -36,7 +33,7 @@ public class PerplexitySearchClientTests
     public async Task Search_WithAllFieldsAndDateFilter_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var searchClient = perplexityClient.SearchClient;
         var request = new SearchRequest
         {
@@ -76,7 +73,7 @@ public class PerplexitySearchClientTests
     public async Task Search_WithAllFieldsAndSearchRecencyFilter_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var searchClient = perplexityClient.SearchClient;
         var request = new SearchRequest
         {
@@ -108,7 +105,7 @@ public class PerplexitySearchClientTests
     public async Task Search_WithInvalidQuery_ThrowsException(string? query)
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var searchClient = perplexityClient.SearchClient;
         var request = new SearchRequest { Query = query };
 
@@ -129,7 +126,7 @@ public class PerplexitySearchClientTests
     public async Task Search_WithWhitespaceQuery_ThrowsException()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var searchClient = perplexityClient.SearchClient;
         var request = new SearchRequest { Query = " " };
 

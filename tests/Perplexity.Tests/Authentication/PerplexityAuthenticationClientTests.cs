@@ -6,14 +6,11 @@ namespace Perplexity.Tests.Authentication;
 
 public class PerplexityAuthenticationClientTests
 {
-    private readonly string _apiKey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY")
-                                      ?? throw new PerplexityMissingApiKeyException();
-
     [Fact]
     public async Task GenerateAuthTokenAndRevokeIt_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var authenticationClient = perplexityClient.AuthenticationClient;
         var generateAuthTokenRequest = new GenerateAuthTokenRequest
         {
@@ -44,7 +41,7 @@ public class PerplexityAuthenticationClientTests
     public async Task GenerateAuth_WithInvalidCharactersInTokenName_ThrowsException(string? tokenName)
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var authenticationClient = perplexityClient.AuthenticationClient;
         var request = new GenerateAuthTokenRequest { TokenName = tokenName };
 
@@ -63,7 +60,7 @@ public class PerplexityAuthenticationClientTests
     public async Task RevokeAuthToken_WithNonexistentAuthToken_ThrowsException()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var authenticationClient = perplexityClient.AuthenticationClient;
         var request = new RevokeAuthTokenRequest { AuthToken = "Nonexistent auth token" };
 

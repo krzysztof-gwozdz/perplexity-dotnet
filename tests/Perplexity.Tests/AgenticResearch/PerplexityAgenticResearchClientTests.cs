@@ -7,14 +7,12 @@ namespace Perplexity.Tests.AgenticResearch;
 public class PerplexityAgenticResearchClientTests
 {
     private const string Model = "xai/grok-4-1-fast-non-reasoning";
-    private readonly string _apiKey = Environment.GetEnvironmentVariable("PERPLEXITY_APIKEY")
-                                      ?? throw new PerplexityMissingApiKeyException();
 
     [Fact]
     public async Task CreateResponse_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var agenticResearchClient = perplexityClient.AgenticResearchClient;
         var request = new AgenticResearchRequest
         {
@@ -41,7 +39,7 @@ public class PerplexityAgenticResearchClientTests
     public async Task Search_WithInvalidInput_ThrowsException(string? input)
     {
         // arrange
-        var perplexityClient = new PerplexityClient(_apiKey);
+        var perplexityClient = new PerplexityClient();
         var agenticResearchClient = perplexityClient.AgenticResearchClient;
         var request = new AgenticResearchRequest
         {
