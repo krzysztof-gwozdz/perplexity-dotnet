@@ -3,7 +3,7 @@ using Perplexity.Common;
 
 namespace Perplexity.Authentication;
 
-public class PerplexityAuthenticationClient(HttpClient httpClient) : BaseClient(httpClient)
+public class PerplexityAuthenticationClient(HttpClient httpClient, string apiKey) : BaseClient(httpClient, apiKey)
 {
     public async Task<GenerateAuthTokenResponse> GenerateAuthToken(GenerateAuthTokenRequest request, CancellationToken cancellationToken = default)
     {

@@ -3,7 +3,7 @@ using Perplexity.Common;
 
 namespace Perplexity.Chat;
 
-public class PerplexityChatClient(HttpClient httpClient) : BaseClient(httpClient)
+public class PerplexityChatClient(HttpClient httpClient, string apiKey) : BaseClient(httpClient, apiKey)
 {
     public async Task<CreateChatCompletionResponse> CreateChatCompletion(CreateChatCompletionRequest request, CancellationToken cancellationToken = default)
     {

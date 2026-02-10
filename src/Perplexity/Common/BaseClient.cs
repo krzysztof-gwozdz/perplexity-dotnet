@@ -6,8 +6,18 @@ using Perplexity.Exceptions;
 
 namespace Perplexity.Common;
 
-public abstract class BaseClient(HttpClient httpClient)
+public abstract class BaseClient
 {
+    private readonly HttpClient _httpClient;
+    
+    public BaseClient(HttpClient httpClient, string apiKey)
+    {
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new("https://api.perplexity.ai");
+        _httpClient.DefaultRequestHeaders.Accept.Add(new("application/json"));
+        _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
+    }
+    
     private readonly JsonSerializerOptions _options = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
@@ -15,7 +25,7 @@ public abstract class BaseClient(HttpClient httpClient)
 
     protected async Task<TResponse> Get<TResponse>(string requestUri, CancellationToken cancellationToken)
     {
-        var response = await httpClient.GetAsync(requestUri, cancellationToken: cancellationToken);
+        var response = await _httpClient.GetAsync(requestUri, cancellationToken: cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -26,7 +36,7 @@ public abstract class BaseClient(HttpClient httpClient)
 
     protected async Task Post<TRequest>(string requestUri, TRequest value, CancellationToken cancellationToken)
     {
-        var response = await httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -36,7 +46,7 @@ public abstract class BaseClient(HttpClient httpClient)
 
     protected async Task<TResponse> Post<TRequest, TResponse>(string requestUri, TRequest value, CancellationToken cancellationToken)
     {
-        var response = await httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {

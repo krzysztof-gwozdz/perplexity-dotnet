@@ -5,24 +5,17 @@ using Perplexity.Search;
 
 namespace Perplexity;
 
-public class PerplexityClient
+public class PerplexityClient(HttpClient httpClient, string apiKey)
 {
-    private readonly HttpClient _httpClient;
-
-    public PerplexityClient(string apiKey)
+    public PerplexityClient(string apiKey) : this(new HttpClient(), apiKey)
     {
-        // todo: it's temporary solution
-        _httpClient = new HttpClient(); 
-        _httpClient.BaseAddress = new("https://api.perplexity.ai");
-        _httpClient.DefaultRequestHeaders.Accept.Add(new("application/json"));
-        _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
     }
     
-    public PerplexityAgenticResearchClient AgenticResearchClient => new(_httpClient);
+    public PerplexityAgenticResearchClient AgenticResearchClient => new(httpClient, apiKey);
 
-    public PerplexityAuthenticationClient AuthenticationClient => new(_httpClient);
+    public PerplexityAuthenticationClient AuthenticationClient => new(httpClient, apiKey);
 
-    public PerplexityChatClient ChatClient => new(_httpClient);
+    public PerplexityChatClient ChatClient => new(httpClient, apiKey);
     
-    public PerplexitySearchClient SearchClient => new(_httpClient);
+    public PerplexitySearchClient SearchClient => new(httpClient, apiKey);
 }

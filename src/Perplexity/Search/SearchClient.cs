@@ -3,7 +3,7 @@ using Perplexity.Search.Dtos;
 
 namespace Perplexity.Search;
 
-public class PerplexitySearchClient(HttpClient httpClient) : BaseClient(httpClient)
+public class PerplexitySearchClient(HttpClient httpClient, string apiKey) : BaseClient(httpClient, apiKey)
 {
     public async Task<SearchResponse> Search(SearchRequest request, CancellationToken cancellationToken = default)
     {
