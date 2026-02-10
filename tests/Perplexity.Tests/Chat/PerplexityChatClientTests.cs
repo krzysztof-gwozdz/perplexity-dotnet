@@ -10,7 +10,7 @@ public class PerplexityChatClientTests
                                       ?? throw new PerplexityMissingApiKeyException();
 
     [Fact]
-    public async Task CreateChatCompletion_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task CreateChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
@@ -81,7 +81,7 @@ public class PerplexityChatClientTests
     }
 
     [Fact]
-    public async Task CreateAsyncChatCompletion_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task CreateAsyncChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
@@ -138,7 +138,7 @@ public class PerplexityChatClientTests
     }
 
     [Fact]
-    public async Task ListAsyncChatCompletions_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task ListAsyncChatCompletions_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
@@ -159,7 +159,7 @@ public class PerplexityChatClientTests
     }
 
     [Fact]
-    public async Task GetAsyncChatCompletions_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task GetAsyncChatCompletions_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);

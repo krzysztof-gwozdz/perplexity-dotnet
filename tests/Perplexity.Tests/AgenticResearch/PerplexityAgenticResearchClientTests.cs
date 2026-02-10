@@ -11,7 +11,7 @@ public class PerplexityAgenticResearchClientTests
                                       ?? throw new PerplexityMissingApiKeyException();
 
     [Fact]
-    public async Task CreateResponse_WithOnlyRequiredData_ReturnsValidResponseWithRequiredData()
+    public async Task CreateResponse_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient(_apiKey);
