@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Perplexity.Exceptions;
 
 namespace Perplexity;
 
@@ -15,21 +16,31 @@ public abstract class BaseClient(HttpClient httpClient)
     {
         var response = await httpClient.GetAsync(requestUri, cancellationToken: cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+        }
         return ParseResponse<TResponse>(content);
     }
 
     protected async Task Post<TRequest>(string requestUri, TRequest value, CancellationToken cancellationToken)
     {
         var response = await httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+        }
     }
 
     protected async Task<TResponse> Post<TRequest, TResponse>(string requestUri, TRequest value, CancellationToken cancellationToken)
     {
         var response = await httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+        }
         return ParseResponse<TResponse>(content);
     }
 
