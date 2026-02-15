@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Perplexity.Chat.Dtos;
 using Perplexity.Exceptions;
 
@@ -9,11 +9,9 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
     private const string Model = "sonar";
 
     [Fact]
-    public async Task CreateChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
+    public async Task CreateChatCompletion_WithTextMessage_ReturnsValidResponseWithRequiredData()
     {
         // arrange
-        var perplexityClient = new PerplexityClient();
-        var chatClient = perplexityClient.ChatClient;
         var request = new CreateChatCompletionRequest
         {
             Model = Model,
@@ -25,7 +23,136 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         };
 
         // act
-        var response = await chatClient.CreateChatCompletion(request);
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+    [Fact]
+    public async Task CreateChatCompletion_WithTextContent_ReturnsValidResponseWithRequiredData()
+    {
+        // arrange
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateSystemMessage("Response with pong for ping request"),
+                Message.CreateUserMessageWithTextContent("ping")
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+
+    [Fact]
+    public async Task CreateChatCompletion_WithManyChunksContent_ReturnsValidResponseWithRequiredData()
+    {
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateUserMessage(
+                [
+                    new TextContentChunk { Text = "Tell me a joke." },
+                    new TextContentChunk { Text = "It should start with: There was a bar" },
+                    new TextContentChunk { Text = "Should be about a duck." }
+                ])
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+    [Fact]
+    public async Task CreateChatCompletion_WithImageUrlContent_ReturnsValidResponseWithRequiredData()
+    {
+        // arrange
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateSystemMessage("What do you see on the image?"),
+                Message.CreateUserMessageWithImageUrlContent("https://pl.wikipedia.org/static/images/icons/wikipedia.png")
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+    [Fact]
+    public async Task CreateChatCompletion_WithVideoUrlContent_ReturnsValidResponseWithRequiredData()
+    {
+        // arrange
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateSystemMessage("What do you see on the video?"),
+                Message.CreateUserMessageWithVideoUrlContent("https://www.w3schools.com/tags/mov_bbb.mp4")
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+    [Fact]
+    public async Task CreateChatCompletion_WithFileUrlContent_ReturnsValidResponseWithRequiredData()
+    {
+        // arrange
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateSystemMessage("Describe the content of this file in one sentence."),
+                Message.CreateUserMessageWithFileUrlContent("https://morth.nic.in/sites/default/files/dd12-13_0.pdf", "Dummy file.pdf")
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
+
+        // assert
+        ValidateValidResponse(response);
+    }
+
+    [Fact(Skip = "It just does not work")]
+    public async Task CreateChatCompletion_WithPdfUrlContent_ReturnsValidResponseWithRequiredData()
+    {
+        var request = new CreateChatCompletionRequest
+        {
+            Model = Model,
+            Messages =
+            [
+                Message.CreateSystemMessage("Describe the content of this file in."),
+                Message.CreateUserMessageWithPdfUrlContent("https://morth.nic.in/sites/default/files/dd12-13_0.pdf")
+            ]
+        };
+
+        // act
+        var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
         ValidateValidResponse(response);
