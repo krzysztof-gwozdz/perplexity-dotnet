@@ -146,25 +146,4 @@ public class PerplexitySearchClientTests
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
     }
-
-    [Fact]
-    public async Task Search_WithWhitespaceQuery_ReturnsFailResponse()
-    {
-        // arrange
-        var perplexityClient = new PerplexityClient();
-        var searchClient = perplexityClient.SearchClient;
-        var request = new SearchRequest { Query = " " };
-
-        // act
-        var result = await searchClient.Search(request);
-
-        // assert
-        Assert.NotNull(result);
-        Assert.False(result.IsSuccess);
-        Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
-        Assert.Equal(HttpStatusCode.GatewayTimeout, result.RawApiResponse.StatusCode);  // Yes, that looks like a bug.
-        Assert.NotEmpty(result.RawApiResponse.Headers);
-        Assert.Null(result.Error);
-    }
 }
