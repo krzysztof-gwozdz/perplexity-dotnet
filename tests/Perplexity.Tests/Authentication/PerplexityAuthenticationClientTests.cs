@@ -1,6 +1,5 @@
 using System.Net;
 using Perplexity.Authentication.Dtos;
-using Perplexity.Exceptions;
 
 namespace Perplexity.Tests.Authentication;
 
@@ -18,17 +17,28 @@ public class PerplexityAuthenticationClientTests
         };
 
         // act generate auth token
-        var generateResponse = await authenticationClient.GenerateAuthToken(generateAuthTokenRequest);
+        var generateResult = await authenticationClient.GenerateAuthToken(generateAuthTokenRequest);
 
         // assert generate auth token
-        Assert.NotNull(generateResponse);
-        Assert.NotNull(generateResponse.AuthToken);
-        Assert.NotNull(generateResponse.CreatedAtEpochSeconds);
-        Assert.Equal(generateAuthTokenRequest.TokenName, generateResponse.TokenName);
+        Assert.NotNull(generateResult);
+        Assert.True(generateResult.IsSuccess);
+        Assert.NotNull(generateResult.RawApiResponse);
+        Assert.NotEmpty(generateResult.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, generateResult.RawApiResponse.StatusCode);
+        Assert.NotEmpty(generateResult.RawApiResponse.Headers);
+        Assert.NotNull(generateResult.Data);
+        Assert.NotNull(generateResult.Data.AuthToken);
+        Assert.NotNull(generateResult.Data.CreatedAtEpochSeconds);
+        Assert.Equal(generateAuthTokenRequest.TokenName, generateResult.Data.TokenName);
 
         // act revoke auth token
-        var revokeAuthTokenRequest = new RevokeAuthTokenRequest { AuthToken = generateResponse.AuthToken };
-        await authenticationClient.RevokeAuthToken(revokeAuthTokenRequest);
+        var revokeAuthTokenRequest = new RevokeAuthTokenRequest { AuthToken = generateResult.Data.AuthToken };
+        var revokeResult = await authenticationClient.RevokeAuthToken(revokeAuthTokenRequest);
+
+        // assert revoke auth token
+        Assert.NotNull(revokeResult);
+        Assert.True(revokeResult.IsSuccess);
+        Assert.NotNull(revokeResult.RawApiResponse);
     }
 
     [Theory]
@@ -38,7 +48,7 @@ public class PerplexityAuthenticationClientTests
     [InlineData("#")]
     [InlineData("*")]
     [InlineData("~")]
-    public async Task GenerateAuth_WithInvalidCharactersInTokenName_ThrowsException(string? tokenName)
+    public async Task GenerateAuth_WithInvalidCharactersInTokenName_ReturnsFailResponse(string? tokenName)
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -46,18 +56,19 @@ public class PerplexityAuthenticationClientTests
         var request = new GenerateAuthTokenRequest { TokenName = tokenName };
 
         // act
-        var generateAuthToken = async () => await authenticationClient.GenerateAuthToken(request);
+        var result = await authenticationClient.GenerateAuthToken(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(generateAuthToken);
-        Assert.Equal(HttpStatusCode.InternalServerError, exception.StatusCode);
-        Assert.Equal(
-            "Token name can only contain alphanumeric characters, hyphens (-), underscores (_), at symbols (@), and spaces",
-            exception.Content);
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.InternalServerError, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
     }
 
     [Fact]
-    public async Task RevokeAuthToken_WithNonexistentAuthToken_ThrowsException()
+    public async Task RevokeAuthToken_WithNonexistentAuthToken_ReturnsFailResponse()
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -65,11 +76,14 @@ public class PerplexityAuthenticationClientTests
         var request = new RevokeAuthTokenRequest { AuthToken = "Nonexistent auth token" };
 
         // act
-        var revokeAuthToken = async () => await authenticationClient.RevokeAuthToken(request);
+        var result = await authenticationClient.RevokeAuthToken(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(revokeAuthToken);
-        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
-        Assert.Equal("[delete_auth_token_internal] token not found", exception.Content);
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.NotFound, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
     }
 }

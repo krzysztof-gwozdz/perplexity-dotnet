@@ -1,6 +1,5 @@
 using System.Net;
 using Perplexity.Chat.Dtos;
-using Perplexity.Exceptions;
 
 namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
@@ -26,7 +25,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Fact]
@@ -47,7 +46,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
 
@@ -72,7 +71,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Fact]
@@ -93,7 +92,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Fact]
@@ -114,7 +113,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Fact]
@@ -135,7 +134,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Fact(Skip = "It just does not work")]
@@ -155,13 +154,13 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(response);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task CreateChatCompletion_WithInvalidModelData_ThrowsException(string? model)
+    public async Task CreateChatCompletion_WithInvalidModelData_ReturnsFailResponse(string? model)
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -177,39 +176,47 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         };
 
         // act
-        var createAsyncChatCompletion = async () => await chatClient.CreateChatCompletion(request);
+        var result = await chatClient.CreateChatCompletion(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(createAsyncChatCompletion);
-        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
-        Assert.NotNull(exception.Content);
-        Assert.NotNull(exception.Error);
-        Assert.Equal(400, exception.Error.Code);
-        Assert.NotEmpty(exception.Error.Type);
-        Assert.NotEmpty(exception.Error.Message);
+        Assert.NotNull(result);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Error);
+        Assert.Equal(400, result.Error.Code);
+        Assert.NotEmpty(result.Error.Type);
+        Assert.NotEmpty(result.Error.Message);
     }
 
-    private static void ValidateValidResponse(CreateChatCompletionResponse response)
+    private static void ValidateSuccessfulResult(Result<CreateChatCompletionResponse> result)
     {
-        Assert.NotNull(response);
-        Assert.NotNull(response.Id);
-        Assert.Equal(Model, response.Model);
-        Assert.NotNull(response.Created);
-        Assert.NotNull(response.Choices);
-        Assert.Single(response.Choices);
-        foreach (var choice in response.Choices)
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Id);
+        Assert.Equal(Model, result.Data.Model);
+        Assert.NotNull(result.Data.Created);
+        Assert.NotNull(result.Data.Choices);
+        Assert.Single(result.Data.Choices);
+        foreach (var choice in result.Data.Choices)
         {
             Assert.NotNull(choice);
             Assert.NotNull(choice.Message);
             Assert.Equal("assistant", choice.Message.Role);
-            Assert.NotNull(response.Usage);
-            Assert.NotNull(response.Usage.PromptTokens);
-            Assert.NotNull(response.Usage.CompletionTokens);
-            Assert.NotNull(response.Usage.TotalTokens);
-            Assert.NotNull(response.Usage.Cost);
-            Assert.NotNull(response.Usage.Cost.InputTokensCost);
-            Assert.NotNull(response.Usage.Cost.OutputTokensCost);
-            Assert.NotNull(response.Usage.Cost.TotalCost);
+            Assert.NotNull(result.Data.Usage);
+            Assert.NotNull(result.Data.Usage.PromptTokens);
+            Assert.NotNull(result.Data.Usage.CompletionTokens);
+            Assert.NotNull(result.Data.Usage.TotalTokens);
+            Assert.NotNull(result.Data.Usage.Cost);
+            Assert.NotNull(result.Data.Usage.Cost.InputTokensCost);
+            Assert.NotNull(result.Data.Usage.Cost.OutputTokensCost);
+            Assert.NotNull(result.Data.Usage.Cost.TotalCost);
         }
     }
 }

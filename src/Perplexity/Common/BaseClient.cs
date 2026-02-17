@@ -2,7 +2,6 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Perplexity.Common.Dtos;
-using Perplexity.Exceptions;
 
 namespace Perplexity.Common;
 
@@ -17,58 +16,149 @@ public abstract class BaseClient
         _httpClient.DefaultRequestHeaders.Accept.Add(new("application/json"));
         _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
     }
-    
+
     private readonly JsonSerializerOptions _options = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
     };
 
-    protected async Task<TResponse> Get<TResponse>(string requestUri, CancellationToken cancellationToken)
+    protected async Task<Result<TResponseDto>> Get<TResponseDto>(string requestUri, CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync(requestUri, cancellationToken: cancellationToken);
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            ThrowOnError(response, content);
+            return await ParseFailResponse<TResponseDto>(response, cancellationToken);
         }
-        return ParseResponse<TResponse>(content);
+        return await ParseSuccessResponse<TResponseDto>(response, cancellationToken);
     }
 
-    protected async Task Post<TRequest>(string requestUri, TRequest value, CancellationToken cancellationToken)
+    protected async Task<Result> Post<TRequestDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            ThrowOnError(response, content);
+            return await ParseFailResponse(response, cancellationToken);
         }
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        return new Result
+        {
+            RawApiResponse = new RawApiResponse
+            {
+                Content = content,
+                StatusCode = response.StatusCode,
+                Headers = response.Headers.ToDictionary()
+            }
+        };
     }
 
-    protected async Task<TResponse> Post<TRequest, TResponse>(string requestUri, TRequest value, CancellationToken cancellationToken)
+    protected async Task<Result<TResponseDto>> Post<TRequestDto, TResponseDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync(requestUri, value, _options, cancellationToken: cancellationToken);
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
-            ThrowOnError(response, content);
+            return await ParseFailResponse<TResponseDto>(response, cancellationToken);
         }
-        return ParseResponse<TResponse>(content);
+        return await ParseSuccessResponse<TResponseDto>(response, cancellationToken);
     }
 
-    private static void ThrowOnError(HttpResponseMessage response, string content)
+    private static async Task<Result<TResponseDto>> ParseSuccessResponse<TResponseDto>(HttpResponseMessage response,
+        CancellationToken cancellationToken)
     {
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        var dto = JsonSerializer.Deserialize<TResponseDto>(content) ?? throw new JsonException($"Failed to deserialize response to {typeof(TResponseDto).Name}");
+        return new Result<TResponseDto>
+        {
+            Data = dto,
+            RawApiResponse = new RawApiResponse
+            {
+                Content = content,
+                StatusCode = response.StatusCode,
+                Headers = response.Headers.ToDictionary()
+            }
+        };
+    }
+
+    private static async Task<Result<TResponseDto>> ParseFailResponse<TResponseDto>(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         try
         {
-            var errorResponse = ParseResponse<ErrorResponse>(content);
-            throw new PerplexityClientException(response.StatusCode, response.Headers, content, errorResponse);
+            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");
+            return new Result<TResponseDto>
+            {
+                Error = new PerplexityApiError
+                {
+                    Code = errorResponse.Error.Code,
+                    Type = errorResponse.Error.Type,
+                    Message = errorResponse.Error.Message
+                },
+                RawApiResponse = new RawApiResponse
+                {
+                    Content = content,
+                    StatusCode = response.StatusCode,
+                    Headers = response.Headers.ToDictionary()
+                }
+            };
         }
-        catch (Exception ex) when (ex is not PerplexityClientException)
+        catch (Exception ex)
         {
-            throw new PerplexityClientException(response.StatusCode, response.Headers, content);
+            return new Result<TResponseDto>
+            {
+                Error = new PerplexityApiError
+                {
+                    Code = -1,
+                    Type = "internal_server_error",
+                    Message = ex.Message
+                },
+                RawApiResponse = new RawApiResponse
+                {
+                    Content = content,
+                    StatusCode = response.StatusCode,
+                    Headers = response.Headers.ToDictionary()
+                }
+            };
         }
     }
 
-    private static TResponse ParseResponse<TResponse>(string content) =>
-        JsonSerializer.Deserialize<TResponse>(content)
-        ?? throw new JsonException($"Failed to deserialize response to {typeof(TResponse).Name}");
+    private static async Task<Result> ParseFailResponse(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        try
+        {
+            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");
+            return new Result
+            {
+                Error = new PerplexityApiError
+                {
+                    Code = errorResponse.Error.Code,
+                    Type = errorResponse.Error.Type,
+                    Message = errorResponse.Error.Message
+                },
+                RawApiResponse = new RawApiResponse
+                {
+                    Content = content,
+                    StatusCode = response.StatusCode,
+                    Headers = response.Headers.ToDictionary()
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new Result
+            {
+                Error = new PerplexityApiError
+                {
+                    Code = -1,
+                    Type = "internal_server_error",
+                    Message = ex.Message
+                },
+                RawApiResponse = new RawApiResponse
+                {
+                    Content = content,
+                    StatusCode = response.StatusCode,
+                    Headers = response.Headers.ToDictionary()
+                }
+            };
+        }
+    }
 }

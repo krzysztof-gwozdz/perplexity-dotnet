@@ -1,6 +1,5 @@
-﻿using System.Net;
+using System.Net;
 using Perplexity.Chat.Dtos;
-using Perplexity.Exceptions;
 
 namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
@@ -21,16 +20,16 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         };
 
         // act
-        var response = await ChatClient.CreateAsyncChatCompletion(request);
+        var result = await ChatClient.CreateAsyncChatCompletion(request);
 
         // assert
-        ValidateValidResponse(response);
+        ValidateSuccessfulResult(result);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task CreateAsyncChatCompletion_WithInvalidModelData_ThrowsException(string? model)
+    public async Task CreateAsyncChatCompletion_WithInvalidModelData_ReturnsFailResponse(string? model)
     {
         // arrange
         var request = new CreateAsyncChatCompletionRequest
@@ -44,23 +43,31 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         };
 
         // act
-        var createAsyncChatCompletion = async () => await ChatClient.CreateAsyncChatCompletion(request);
+        var result = await ChatClient.CreateAsyncChatCompletion(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(createAsyncChatCompletion);
-        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
-        Assert.NotNull(exception.Content);
-        Assert.NotNull(exception.Error);
-        Assert.Equal(400, exception.Error.Code);
-        Assert.NotEmpty(exception.Error.Type);
-        Assert.NotEmpty(exception.Error.Message);
+        Assert.NotNull(result);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Error);
+        Assert.Equal(400, result.Error.Code);
+        Assert.NotEmpty(result.Error.Type);
+        Assert.NotEmpty(result.Error.Message);
     }
 
-    private static void ValidateValidResponse(CreateAsyncChatCompletionResponse response)
+    private static void ValidateSuccessfulResult(Result<CreateAsyncChatCompletionResponse> result)
     {
-        Assert.NotNull(response);
-        Assert.NotNull(response.Id);
-        Assert.NotNull(response.CreatedAt);
-        Assert.NotNull(response.Status);
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Id);
+        Assert.NotNull(result.Data.CreatedAt);
+        Assert.NotNull(result.Data.Status);
     }
 }

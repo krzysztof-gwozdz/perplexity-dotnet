@@ -1,5 +1,4 @@
 using System.Net;
-using Perplexity.Exceptions;
 using Perplexity.Search.Dtos;
 
 namespace Perplexity.Tests.Search;
@@ -7,7 +6,7 @@ namespace Perplexity.Tests.Search;
 public class PerplexitySearchClientTests
 {
     [Fact]
-    public async Task Search_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
+    public async Task Search_WithOnlyRequiredFields_ReturnsSuccessResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -15,22 +14,30 @@ public class PerplexitySearchClientTests
         var request = new SearchRequest { Query = "Funny cat images" };
 
         // act
-        var response = await searchClient.Search(request);
+        var result = await searchClient.Search(request);
 
         // assert
-        Assert.NotNull(response);
-        Assert.NotNull(response.Id);
-        Assert.NotNull(response.Results);
-        Assert.NotEmpty(response.Results);
-        var result = response.Results[0];
         Assert.NotNull(result);
-        Assert.NotNull(result.Title);
-        Assert.NotNull(result.Url);
-        Assert.NotNull(result.Snippet);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Id);
+        Assert.NotNull(result.Data.Results);
+        Assert.NotEmpty(result.Data.Results);
+        foreach (var searchResult in result.Data.Results)
+        {
+            Assert.NotNull(searchResult);
+            Assert.NotNull(searchResult.Title);
+            Assert.NotNull(searchResult.Url);
+            Assert.NotNull(searchResult.Snippet);
+        }
     }
     
     [Fact]
-    public async Task Search_WithAllFieldsAndDateFilter_ReturnsValidResponseWithRequiredData()
+    public async Task Search_WithAllFieldsAndDateFilter_ReturnsSuccessResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -52,25 +59,32 @@ public class PerplexitySearchClientTests
         };
 
         // act
-        var response = await searchClient.Search(request);
+        var result = await searchClient.Search(request);
 
         // assert
-        Assert.NotNull(response);
-        Assert.NotNull(response.Id);
-        Assert.NotNull(response.Results);
-        Assert.NotEmpty(response.Results);
-        var result = response.Results[0];
         Assert.NotNull(result);
-        Assert.NotNull(result.Title);
-        Assert.NotNull(result.Url);
-        Assert.NotNull(result.Snippet);
-        Assert.NotNull(result.Date);
-        Assert.NotNull(result.LastUpdated);
-        Assert.NotNull(response.ServerTime);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Id);
+        Assert.NotNull(result.Data.Results);
+        Assert.NotEmpty(result.Data.Results);
+        foreach (var searchResult in result.Data.Results)
+        {
+            Assert.NotNull(searchResult);
+            Assert.NotNull(searchResult.Title);
+            Assert.NotNull(searchResult.Url);
+            Assert.NotNull(searchResult.Snippet);
+            Assert.NotNull(searchResult.Date);
+            Assert.NotNull(searchResult.LastUpdated);
+        }
+        Assert.NotNull(result.Data.ServerTime);
     }
 
     [Fact]
-    public async Task Search_WithAllFieldsAndSearchRecencyFilter_ReturnsValidResponseWithRequiredData()
+    public async Task Search_WithAllFieldsAndSearchRecencyFilter_ReturnsSuccessResponseWithRequiredData()
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -85,24 +99,32 @@ public class PerplexitySearchClientTests
         };
 
         // act
-        var response = await searchClient.Search(request);
+        var result = await searchClient.Search(request);
 
         // assert
-        Assert.NotNull(response);
-        Assert.NotNull(response.Id);
-        Assert.NotNull(response.Results);
-        Assert.NotEmpty(response.Results);
-        var result = response.Results[0];
         Assert.NotNull(result);
-        Assert.NotNull(result.Title);
-        Assert.NotNull(result.Url);
-        Assert.NotNull(result.Snippet);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Id);
+        Assert.NotNull(result.Data.Results);
+        Assert.NotEmpty(result.Data.Results);
+        foreach (var searchResult in result.Data.Results)
+        {
+            Assert.NotNull(searchResult);
+            Assert.NotNull(searchResult.Title);
+            Assert.NotNull(searchResult.Url);
+            Assert.NotNull(searchResult.Snippet);
+        }
     }
     
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task Search_WithInvalidQuery_ThrowsException(string? query)
+    public async Task Search_WithInvalidQuery_ReturnsFailResponse(string? query)
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -110,20 +132,23 @@ public class PerplexitySearchClientTests
         var request = new SearchRequest { Query = query };
 
         // act
-        var search = async () => await searchClient.Search(request);
+        var result = await searchClient.Search(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(search);
-        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
-        Assert.NotNull(exception.Content);
-        Assert.NotNull(exception.Error);
-        Assert.Equal(400, exception.Error.Code);
-        Assert.NotEmpty(exception.Error.Type);
-        Assert.NotEmpty(exception.Error.Message);
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Error);
+        Assert.Equal(400, result.Error.Code);
+        Assert.NotEmpty(result.Error.Type);
+        Assert.NotEmpty(result.Error.Message);
     }
 
     [Fact]
-    public async Task Search_WithWhitespaceQuery_ThrowsException()
+    public async Task Search_WithWhitespaceQuery_ReturnsFailResponse()
     {
         // arrange
         var perplexityClient = new PerplexityClient();
@@ -131,11 +156,15 @@ public class PerplexitySearchClientTests
         var request = new SearchRequest { Query = " " };
 
         // act
-        var search = async () => await searchClient.Search(request);
+        var result = await searchClient.Search(request);
 
         // assert
-        var exception = await Assert.ThrowsAsync<PerplexityClientException>(search);
-        Assert.Equal(HttpStatusCode.GatewayTimeout, exception.StatusCode); // Yes, that looks like a bug.
-        Assert.Equal("error code: 504", exception.Content);
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.GatewayTimeout, result.RawApiResponse.StatusCode);  // Yes, that looks like a bug.
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.Null(result.Error);
     }
 }

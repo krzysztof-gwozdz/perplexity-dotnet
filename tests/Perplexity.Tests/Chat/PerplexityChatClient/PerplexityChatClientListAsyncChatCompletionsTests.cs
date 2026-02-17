@@ -1,4 +1,6 @@
-﻿namespace Perplexity.Tests.Chat.PerplexityChatClient;
+using System.Net;
+
+namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
 public class PerplexityChatClientListAsyncChatCompletionsTests : PerplexityChatClientTestsBase
 {
@@ -6,13 +8,19 @@ public class PerplexityChatClientListAsyncChatCompletionsTests : PerplexityChatC
     public async Task ListAsyncChatCompletions_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // act
-        var response = await ChatClient.ListAsyncChatCompletions();
+        var result = await ChatClient.ListAsyncChatCompletions();
 
         // assert
-        Assert.NotNull(response);
-        Assert.NotNull(response.Requests);
-        Assert.NotEmpty(response.Requests);
-        var request = response.Requests[0];
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.Data);
+        Assert.NotNull(result.Data.Requests);
+        Assert.NotEmpty(result.Data.Requests);
+        var request = result.Data.Requests[0];
         Assert.NotNull(request);
         Assert.NotNull(request.Id);
         Assert.NotNull(request.CreatedAt);

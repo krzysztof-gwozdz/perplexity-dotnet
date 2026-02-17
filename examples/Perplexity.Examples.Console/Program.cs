@@ -1,4 +1,4 @@
-﻿using Perplexity;
+using Perplexity;
 using Perplexity.Chat.Dtos;
 
 Console.WriteLine("Perplexity Console Example");
@@ -15,13 +15,13 @@ var request = new CreateChatCompletionRequest
 };
 var response = await chatClient.CreateChatCompletion(request);
 Console.WriteLine("MESSAGES");
-foreach (var choice in response.Choices)
+foreach (var choice in response.Data.Choices)
 {
     Console.WriteLine(choice.Message.Content);
 }
 Console.WriteLine();
 Console.WriteLine("CITATIONS");
-foreach (var citation in response.Citations)
+foreach (var citation in response.Data.Citations)
 {
     Console.WriteLine(citation);
 }
