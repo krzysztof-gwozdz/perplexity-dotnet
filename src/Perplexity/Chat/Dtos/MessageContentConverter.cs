@@ -5,36 +5,29 @@ namespace Perplexity.Chat.Dtos;
 
 public sealed class MessageContentConverter : JsonConverter<object>
 {
-    public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        if (reader.TokenType == JsonTokenType.Null)
+    public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+        reader.TokenType switch
         {
-            return null;
-        }
-        if (reader.TokenType == JsonTokenType.String)
-        {
-            return reader.GetString();
-        }
-        return JsonSerializer.Deserialize<List<MessageContentChunk>>(ref reader, options);
-    }
+            JsonTokenType.Null => null,
+            JsonTokenType.String => reader.GetString(),
+            _ => JsonSerializer.Deserialize<List<MessageContentChunk>>(ref reader, options)
+        };
 
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
-        if (value is string s)
+        switch (value)
         {
-            writer.WriteStringValue(s);
-            return;
+            case string s:
+                writer.WriteStringValue(s);
+                return;
+            case MessageContentChunk part:
+                JsonSerializer.Serialize(writer, new List<MessageContentChunk> { part }, options);
+                return;
+            case IEnumerable<MessageContentChunk> parts:
+                JsonSerializer.Serialize(writer, parts.ToList(), options);
+                return;
+            default:
+                throw new JsonException($"Message content must be string or IReadOnlyList<{nameof(MessageContentChunk)}>. Got {value?.GetType().FullName ?? "null"}.");
         }
-        if (value is MessageContentChunk part)
-        {
-            JsonSerializer.Serialize(writer, new List<MessageContentChunk> { part }, options);
-            return;
-        }
-        if (value is IEnumerable<MessageContentChunk> parts)
-        {
-            JsonSerializer.Serialize(writer, parts.ToList(), options);
-            return;
-        }
-        throw new JsonException($"Message content must be string or IReadOnlyList<{nameof(MessageContentChunk)}>. Got {value?.GetType().FullName ?? "null"}.");
     }
 }

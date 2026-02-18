@@ -14,4 +14,3 @@ public record Error
     [JsonPropertyName("message")]
     public string Message { get; init; }
 }
-

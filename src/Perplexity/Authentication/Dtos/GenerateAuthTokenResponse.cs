@@ -9,7 +9,7 @@ public record GenerateAuthTokenResponse
     public string AuthToken { get; init; }
 
     [JsonPropertyName("created_at_epoch_seconds")]
-    public long? CreatedAtEpochSeconds { get; init; }
+    public long CreatedAtEpochSeconds { get; init; }
 
     [JsonPropertyName("token_name")]
     public string TokenName { get; init; }
