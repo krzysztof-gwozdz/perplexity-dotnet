@@ -40,15 +40,7 @@ public abstract class BaseClient
             return await ParseFailResponse(response, cancellationToken);
         }
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
-        return new Result
-        {
-            RawApiResponse = new RawApiResponse
-            {
-                Content = content,
-                StatusCode = response.StatusCode,
-                Headers = response.Headers.ToDictionary()
-            }
-        };
+        return Result.Success(new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()));
     }
 
     protected async Task<Result<TResponseDto>> Post<TRequestDto, TResponseDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken)
@@ -66,16 +58,7 @@ public abstract class BaseClient
     {
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
         var dto = JsonSerializer.Deserialize<TResponseDto>(content) ?? throw new JsonException($"Failed to deserialize response to {typeof(TResponseDto).Name}");
-        return new Result<TResponseDto>
-        {
-            Data = dto,
-            RawApiResponse = new RawApiResponse
-            {
-                Content = content,
-                StatusCode = response.StatusCode,
-                Headers = response.Headers.ToDictionary()
-            }
-        };
+        return Result<TResponseDto>.Success(new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()), dto);
     }
 
     private static async Task<Result<TResponseDto>> ParseFailResponse<TResponseDto>(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -84,39 +67,19 @@ public abstract class BaseClient
         try
         {
             var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");
-            return new Result<TResponseDto>
-            {
-                Error = new PerplexityApiError
-                {
-                    Code = errorResponse.Error.Code,
-                    Type = errorResponse.Error.Type,
-                    Message = errorResponse.Error.Message
-                },
-                RawApiResponse = new RawApiResponse
-                {
-                    Content = content,
-                    StatusCode = response.StatusCode,
-                    Headers = response.Headers.ToDictionary()
-                }
-            };
+            return Result<TResponseDto>.Fail
+            (
+                new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()),
+                new PerplexityApiError(errorResponse.Error.Code, errorResponse.Error.Type, errorResponse.Error.Message)
+            );
         }
         catch (Exception ex)
         {
-            return new Result<TResponseDto>
-            {
-                Error = new PerplexityApiError
-                {
-                    Code = -1,
-                    Type = "internal_server_error",
-                    Message = ex.Message
-                },
-                RawApiResponse = new RawApiResponse
-                {
-                    Content = content,
-                    StatusCode = response.StatusCode,
-                    Headers = response.Headers.ToDictionary()
-                }
-            };
+            return Result<TResponseDto>.Fail
+            (
+                new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()),
+                new PerplexityApiError(-1, "internal_server_error", ex.Message)
+            );
         }
     }
 
@@ -126,39 +89,19 @@ public abstract class BaseClient
         try
         {
             var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");
-            return new Result
-            {
-                Error = new PerplexityApiError
-                {
-                    Code = errorResponse.Error.Code,
-                    Type = errorResponse.Error.Type,
-                    Message = errorResponse.Error.Message
-                },
-                RawApiResponse = new RawApiResponse
-                {
-                    Content = content,
-                    StatusCode = response.StatusCode,
-                    Headers = response.Headers.ToDictionary()
-                }
-            };
+            return Result.Fail
+            (
+                new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()),
+                new PerplexityApiError(errorResponse.Error.Code, errorResponse.Error.Type, errorResponse.Error.Message)
+            );
         }
         catch (Exception ex)
         {
-            return new Result
-            {
-                Error = new PerplexityApiError
-                {
-                    Code = -1,
-                    Type = "internal_server_error",
-                    Message = ex.Message
-                },
-                RawApiResponse = new RawApiResponse
-                {
-                    Content = content,
-                    StatusCode = response.StatusCode,
-                    Headers = response.Headers.ToDictionary()
-                }
-            };
+            return Result.Fail
+            (
+                new RawApiResponse(content, response.StatusCode, response.Headers.ToDictionary()),
+                new PerplexityApiError(-1, "internal_server_error", ex.Message)
+            );
         }
     }
 }
