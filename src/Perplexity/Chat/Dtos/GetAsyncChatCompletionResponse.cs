@@ -30,5 +30,5 @@ public record GetAsyncChatCompletionResponse
     public long? FailedAt { get; init; }
 
     [JsonPropertyName("error_message")]
-    public string? ErrorMessage { get; init; }
+    public string ErrorMessage { get; init; }
 }

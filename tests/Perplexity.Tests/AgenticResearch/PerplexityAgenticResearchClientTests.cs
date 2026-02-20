@@ -1,11 +1,12 @@
 using System.Net;
 using Perplexity.AgenticResearch.Dtos;
+using Perplexity.Common;
 
 namespace Perplexity.Tests.AgenticResearch;
 
 public class PerplexityAgenticResearchClientTests
 {
-    private const string Model = "xai/grok-4-1-fast-non-reasoning";
+    private const string Model = "perplexity/sonar";
 
     [Fact]
     public async Task CreateResponse_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
@@ -269,14 +270,20 @@ public class PerplexityAgenticResearchClientTests
         // assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
         Assert.Equal(400, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.Null(result.Data);
     }
 
     [Fact]
@@ -297,30 +304,45 @@ public class PerplexityAgenticResearchClientTests
         // assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
+        Assert.Equal(400, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.Null(result.Data);
     }
 
-    private static void ValidateSuccessfulResult(Result<AgenticResearchResponse> result)
+    private void ValidateSuccessfulResult(Result<AgenticResearchResponse> result)
     {
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.NotNull(result.Data.Model);
-        Assert.True(result.Data.CreatedAt > 0);
-        Assert.NotNull(result.Data.Object);
-        Assert.NotNull(result.Data.Output);
-        Assert.NotEmpty(result.Data.Output);
-        Assert.NotNull(result.Data.Status);
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.Model);
+        Assert.True(data.CreatedAt > 0);
+        Assert.NotNull(data.Object);
+        Assert.NotNull(data.Output);
+        Assert.NotEmpty(data.Output);
+        Assert.NotNull(data.Status);
     }
 
     private static void ValidateOutputContainsMessage(AgenticResearchResponse data)

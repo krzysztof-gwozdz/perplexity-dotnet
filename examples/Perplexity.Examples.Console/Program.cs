@@ -14,14 +14,22 @@ var request = new CreateChatCompletionRequest
     ]
 };
 var response = await chatClient.CreateChatCompletion(request);
-Console.WriteLine("MESSAGES");
-foreach (var choice in response.Data.Choices)
+if (response.IsSuccess)
 {
-    Console.WriteLine(choice.Message.Content);
+    Console.WriteLine("SUCCESS");
+    Console.WriteLine("MESSAGES");
+    foreach (var choice in response.Data.Choices)
+    {
+        Console.WriteLine(choice.Message.Content);
+    }
+    Console.WriteLine();
+    Console.WriteLine("CITATIONS");
+    foreach (var citation in response.Data.Citations)
+    {
+        Console.WriteLine(citation);
+    }
 }
-Console.WriteLine();
-Console.WriteLine("CITATIONS");
-foreach (var citation in response.Data.Citations)
+else
 {
-    Console.WriteLine(citation);
+    Console.WriteLine("FAILED");
 }

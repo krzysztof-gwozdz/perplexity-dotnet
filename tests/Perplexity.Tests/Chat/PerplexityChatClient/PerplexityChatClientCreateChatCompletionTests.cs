@@ -1,5 +1,6 @@
 using System.Net;
 using Perplexity.Chat.Dtos;
+using Perplexity.Common;
 
 namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
@@ -126,7 +127,8 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
             Messages =
             [
                 Message.CreateSystemMessage("Describe the content of this file in one sentence."),
-                Message.CreateUserMessageWithFileUrlContent("https://morth.nic.in/sites/default/files/dd12-13_0.pdf", "Dummy file.pdf")
+                Message.CreateUserMessageWithFileUrlContent("https://morth.nic.in/sites/default/files/dd12-13_0.pdf",
+                    "Dummy file.pdf")
             ]
         };
 
@@ -180,43 +182,58 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
 
         // assert
         Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
         Assert.Equal(400, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.Null(result.Data);
     }
 
-    private static void ValidateSuccessfulResult(Result<CreateChatCompletionResponse> result)
+    private void ValidateSuccessfulResult(Result<CreateChatCompletionResponse> result)
     {
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.Equal(Model, result.Data.Model);
-        Assert.NotNull(result.Data.Created);
-        Assert.NotNull(result.Data.Choices);
-        Assert.Single(result.Data.Choices);
-        foreach (var choice in result.Data.Choices)
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.Id);
+        Assert.Equal(Model, data.Model);
+        Assert.NotNull(data.Created);
+        Assert.NotNull(data.Choices);
+        Assert.Single(data.Choices);
+        foreach (var choice in data.Choices)
         {
             Assert.NotNull(choice);
             Assert.NotNull(choice.Message);
             Assert.Equal("assistant", choice.Message.Role);
-            Assert.NotNull(result.Data.Usage);
-            Assert.NotNull(result.Data.Usage.PromptTokens);
-            Assert.NotNull(result.Data.Usage.CompletionTokens);
-            Assert.NotNull(result.Data.Usage.TotalTokens);
-            Assert.NotNull(result.Data.Usage.Cost);
-            Assert.NotNull(result.Data.Usage.Cost.InputTokensCost);
-            Assert.NotNull(result.Data.Usage.Cost.OutputTokensCost);
-            Assert.NotNull(result.Data.Usage.Cost.TotalCost);
         }
+        Assert.NotNull(data.Usage);
+        Assert.NotNull(data.Usage.PromptTokens);
+        Assert.NotNull(data.Usage.CompletionTokens);
+        Assert.NotNull(data.Usage.TotalTokens);
+        Assert.NotNull(data.Usage.Cost);
+        Assert.NotNull(data.Usage.Cost.InputTokensCost);
+        Assert.NotNull(data.Usage.Cost.OutputTokensCost);
+        Assert.NotNull(data.Usage.Cost.TotalCost);
     }
 }

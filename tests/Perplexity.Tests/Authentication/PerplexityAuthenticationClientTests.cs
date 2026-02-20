@@ -22,23 +22,38 @@ public class PerplexityAuthenticationClientTests
         // assert generate auth token
         Assert.NotNull(generateResult);
         Assert.True(generateResult.IsSuccess);
+        Assert.NotNull(generateResult.RawApiRequest);
+        Assert.NotEmpty(generateResult.RawApiRequest.Headers);
+        Assert.NotNull(generateResult.RawApiRequest.Content);
+        Assert.NotEmpty(generateResult.RawApiRequest.Content);
         Assert.NotNull(generateResult.RawApiResponse);
-        Assert.NotEmpty(generateResult.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, generateResult.RawApiResponse.StatusCode);
         Assert.NotEmpty(generateResult.RawApiResponse.Headers);
+        Assert.NotNull(generateResult.RawApiResponse.Content);
+        Assert.NotEmpty(generateResult.RawApiResponse.Content);
+        Assert.Null(generateResult.Error);
         Assert.NotNull(generateResult.Data);
-        Assert.NotNull(generateResult.Data.AuthToken);
-        Assert.NotNull(generateResult.Data.CreatedAtEpochSeconds);
-        Assert.Equal(generateAuthTokenRequest.TokenName, generateResult.Data.TokenName);
+        var data = generateResult.Data;
+        Assert.NotNull(data.AuthToken);
+        Assert.True(data.CreatedAtEpochSeconds > 0);
+        Assert.Equal(generateAuthTokenRequest.TokenName, data.TokenName);
 
         // act revoke auth token
         var revokeAuthTokenRequest = new RevokeAuthTokenRequest { AuthToken = generateResult.Data.AuthToken };
         var revokeResult = await authenticationClient.RevokeAuthToken(revokeAuthTokenRequest);
 
         // assert revoke auth token
-        Assert.NotNull(revokeResult);
+        Assert.NotNull(generateResult);
         Assert.True(revokeResult.IsSuccess);
+        Assert.NotNull(revokeResult.RawApiRequest);
+        Assert.NotEmpty(revokeResult.RawApiRequest.Headers);
+        Assert.NotNull(revokeResult.RawApiRequest.Content);
+        Assert.NotEmpty(revokeResult.RawApiRequest.Content);
         Assert.NotNull(revokeResult.RawApiResponse);
+        Assert.Equal(HttpStatusCode.OK, revokeResult.RawApiResponse.StatusCode);
+        Assert.NotEmpty(revokeResult.RawApiResponse.Headers);
+        Assert.Empty(revokeResult.RawApiResponse.Content);
+        Assert.Null(revokeResult.Error);
     }
 
     [Theory]
@@ -61,10 +76,19 @@ public class PerplexityAuthenticationClientTests
         // assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.InternalServerError, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.NotNull(result.Error);
+        Assert.Equal(-1, result.Error.Code);
+        Assert.NotEmpty(result.Error.Type);
+        Assert.NotEmpty(result.Error.Message);
     }
 
     [Fact]
@@ -81,9 +105,18 @@ public class PerplexityAuthenticationClientTests
         // assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.NotFound, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.NotNull(result.Error);
+        Assert.Equal(-1, result.Error.Code);
+        Assert.NotEmpty(result.Error.Type);
+        Assert.NotEmpty(result.Error.Message);
     }
 }

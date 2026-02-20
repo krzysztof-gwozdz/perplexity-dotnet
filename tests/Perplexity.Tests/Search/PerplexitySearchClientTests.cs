@@ -19,15 +19,22 @@ public class PerplexitySearchClientTests
         // assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.NotNull(result.Data.Results);
-        Assert.NotEmpty(result.Data.Results);
-        foreach (var searchResult in result.Data.Results)
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.Results);
+        Assert.NotEmpty(data.Results);
+        foreach (var searchResult in data.Results)
         {
             Assert.NotNull(searchResult);
             Assert.NotNull(searchResult.Title);
@@ -35,7 +42,7 @@ public class PerplexitySearchClientTests
             Assert.NotNull(searchResult.Snippet);
         }
     }
-    
+
     [Fact]
     public async Task Search_WithAllFieldsAndDateFilter_ReturnsSuccessResponseWithRequiredData()
     {
@@ -55,7 +62,7 @@ public class PerplexitySearchClientTests
             LastUpdatedAfterFilter = "01/01/2025",
             LastUpdatedBeforeFilter = "12/31/2025",
             Country = "US",
-            DisplayServerTime = true,
+            DisplayServerTime = true
         };
 
         // act
@@ -63,15 +70,23 @@ public class PerplexitySearchClientTests
 
         // assert
         Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.NotNull(result.Data.Results);
-        Assert.NotEmpty(result.Data.Results);
-        foreach (var searchResult in result.Data.Results)
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.Results);
+        Assert.NotEmpty(data.Results);
+        foreach (var searchResult in data.Results)
         {
             Assert.NotNull(searchResult);
             Assert.NotNull(searchResult.Title);
@@ -80,7 +95,8 @@ public class PerplexitySearchClientTests
             Assert.NotNull(searchResult.Date);
             Assert.NotNull(searchResult.LastUpdated);
         }
-        Assert.NotNull(result.Data.ServerTime);
+
+        Assert.NotNull(data.ServerTime);
     }
 
     [Fact]
@@ -104,15 +120,22 @@ public class PerplexitySearchClientTests
         // assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.NotNull(result.Data.Results);
-        Assert.NotEmpty(result.Data.Results);
-        foreach (var searchResult in result.Data.Results)
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.Results);
+        Assert.NotEmpty(data.Results);
+        foreach (var searchResult in data.Results)
         {
             Assert.NotNull(searchResult);
             Assert.NotNull(searchResult.Title);
@@ -120,7 +143,7 @@ public class PerplexitySearchClientTests
             Assert.NotNull(searchResult.Snippet);
         }
     }
-    
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -137,13 +160,19 @@ public class PerplexitySearchClientTests
         // assert
         Assert.NotNull(result);
         Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.NotNull(result.RawApiRequest.Content);
+        Assert.NotEmpty(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.BadRequest, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
         Assert.Equal(400, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.Null(result.Data);
     }
 }

@@ -13,17 +13,25 @@ public class PerplexityChatClientListAsyncChatCompletionsTests : PerplexityChatC
         // assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.Null(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
         Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Requests);
-        Assert.NotEmpty(result.Data.Requests);
-        var request = result.Data.Requests[0];
-        Assert.NotNull(request);
-        Assert.NotNull(request.Id);
-        Assert.NotNull(request.CreatedAt);
-        Assert.NotNull(request.Status);
+        var data = result.Data;
+        Assert.NotNull(data.Requests);
+        Assert.NotEmpty(data.Requests);
+        foreach (var request in data.Requests)
+        {
+            Assert.NotNull(request);
+            Assert.NotNull(request.Id);
+            Assert.NotNull(request.CreatedAt);
+            Assert.NotNull(request.Status);
+        }
     }
 }

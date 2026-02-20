@@ -12,14 +12,36 @@ public class PerplexityChatClientGetAsyncChatCompletionsTests : PerplexityChatCl
         var asyncChatCompletions = await ChatClient.ListAsyncChatCompletions();
         var @params = new GetAsyncChatCompletionParams
         {
-            ApiRequest = asyncChatCompletions.Data.Requests.Last().Id
+            ApiRequest = asyncChatCompletions.Data!.Requests.Last().Id
         };
 
         // act
-        var response = await ChatClient.GetAsyncChatCompletion(@params);
+        var result = await ChatClient.GetAsyncChatCompletion(@params);
 
         // assert
-        ValidateSuccessfulResult(response);
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.Null(result.RawApiRequest.Content);
+        Assert.NotNull(result.RawApiResponse);
+        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
+        Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
+        Assert.Null(result.Error);
+        Assert.NotNull(result.Data);
+        var data = result.Data;
+        Assert.NotNull(data.Id);
+        Assert.NotNull(data.CreatedAt);
+        Assert.NotNull(data.Status);
+        Assert.NotNull(data.Response);
+        Assert.NotNull(data.Response.Choices);
+        foreach (var choice in data.Response.Choices)
+        {
+            Assert.NotNull(choice);
+            Assert.NotNull(choice.Message);
+            Assert.Equal("assistant", choice.Message.Role);
+        }
     }
 
     [Fact]
@@ -36,35 +58,18 @@ public class PerplexityChatClientGetAsyncChatCompletionsTests : PerplexityChatCl
 
         // assert
         Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.RawApiRequest);
+        Assert.NotEmpty(result.RawApiRequest.Headers);
+        Assert.Null(result.RawApiRequest.Content);
         Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.Equal(HttpStatusCode.NotFound, result.RawApiResponse.StatusCode);
         Assert.NotEmpty(result.RawApiResponse.Headers);
+        Assert.NotNull(result.RawApiResponse.Content);
+        Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
         Assert.Equal(404, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
-    }
-
-    private static void ValidateSuccessfulResult(Result<GetAsyncChatCompletionResponse> result)
-    {
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.RawApiResponse);
-        Assert.NotEmpty(result.RawApiResponse.Content);
-        Assert.Equal(HttpStatusCode.OK, result.RawApiResponse.StatusCode);
-        Assert.NotEmpty(result.RawApiResponse.Headers);
-        Assert.NotNull(result.Data);
-        Assert.NotNull(result.Data.Id);
-        Assert.NotNull(result.Data.CreatedAt);
-        Assert.NotNull(result.Data.Status);
-        Assert.NotNull(result.Data.Response);
-        Assert.NotNull(result.Data.Response.Choices);
-        foreach (var choice in result.Data.Response.Choices)
-        {
-            Assert.NotNull(choice);
-            Assert.NotNull(choice.Message);
-            Assert.Equal("assistant", choice.Message.Role);
-        }
     }
 }
