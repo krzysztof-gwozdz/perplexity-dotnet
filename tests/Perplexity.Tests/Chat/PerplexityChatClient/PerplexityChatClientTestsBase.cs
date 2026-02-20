@@ -1,8 +1,10 @@
-﻿namespace Perplexity.Tests.Chat.PerplexityChatClient;
+﻿using Perplexity.Chat;
+
+namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
 public abstract class PerplexityChatClientTestsBase
 {
-    protected Perplexity.Chat.PerplexityChatClient ChatClient { get; private set; }
+    protected IPerplexityChatClient ChatClient { get; private set; }
 
     protected PerplexityChatClientTestsBase()
     {

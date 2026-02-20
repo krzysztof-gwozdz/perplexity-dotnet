@@ -3,7 +3,7 @@ using Perplexity.Common;
 
 namespace Perplexity.Chat;
 
-public class PerplexityChatClient(HttpClient httpClient, string apiKey) : BaseClient(httpClient, apiKey)
+public class PerplexityChatClient(HttpClient httpClient, string apiKey) : BaseClient(httpClient, apiKey), IPerplexityChatClient
 {
     public async Task<Result<CreateChatCompletionResponse>> CreateChatCompletion(CreateChatCompletionRequest request, CancellationToken cancellationToken = default) => 
         await Post<CreateChatCompletionRequest, CreateChatCompletionResponse>("/chat/completions", request, cancellationToken);

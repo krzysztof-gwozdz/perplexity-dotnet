@@ -5,7 +5,7 @@ using Perplexity.Search;
 
 namespace Perplexity;
 
-public class PerplexityClient
+public class PerplexityClient : IPerplexityClient
 {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
@@ -24,11 +24,11 @@ public class PerplexityClient
         _apiKey = apiKey;
     }
     
-    public PerplexityAgenticResearchClient AgenticResearchClient => new(_httpClient, _apiKey);
+    public IPerplexityAgenticResearchClient AgenticResearchClient => new PerplexityAgenticResearchClient(_httpClient, _apiKey);
 
-    public PerplexityAuthenticationClient AuthenticationClient => new(_httpClient, _apiKey);
+    public IPerplexityAuthenticationClient AuthenticationClient => new PerplexityAuthenticationClient(_httpClient, _apiKey);
 
-    public PerplexityChatClient ChatClient => new(_httpClient, _apiKey);
+    public IPerplexityChatClient ChatClient => new PerplexityChatClient(_httpClient, _apiKey);
     
-    public PerplexitySearchClient SearchClient => new(_httpClient, _apiKey);
+    public IPerplexitySearchClient SearchClient => new PerplexitySearchClient(_httpClient, _apiKey);
 }
