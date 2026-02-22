@@ -196,6 +196,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         Assert.Equal(400, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.Null(result.Error.Exception);
         Assert.Null(result.Data);
     }
 

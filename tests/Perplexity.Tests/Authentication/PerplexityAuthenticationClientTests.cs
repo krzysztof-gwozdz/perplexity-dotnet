@@ -86,9 +86,10 @@ public class PerplexityAuthenticationClientTests
         Assert.NotNull(result.RawApiResponse.Content);
         Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
-        Assert.Equal(-1, result.Error.Code);
+        Assert.Equal(500, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.NotNull(result.Error.Exception);
     }
 
     [Fact]
@@ -115,8 +116,9 @@ public class PerplexityAuthenticationClientTests
         Assert.NotNull(result.RawApiResponse.Content);
         Assert.NotEmpty(result.RawApiResponse.Content);
         Assert.NotNull(result.Error);
-        Assert.Equal(-1, result.Error.Code);
+        Assert.Equal(404, result.Error.Code);
         Assert.NotEmpty(result.Error.Type);
         Assert.NotEmpty(result.Error.Message);
+        Assert.NotNull(result.Error.Exception);
     }
 }

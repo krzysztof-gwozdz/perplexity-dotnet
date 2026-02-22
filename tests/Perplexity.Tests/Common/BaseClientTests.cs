@@ -50,10 +50,10 @@ public class TestClient(HttpClient httpClient, string apiKey) : BaseClient(httpC
     public new async Task<Result<TResponseDto>> Get<TResponseDto>(string requestUri, CancellationToken cancellationToken = default) =>
         await base.Get<TResponseDto>(requestUri, cancellationToken);
 
-    public async Task<Result> Post<TRequestDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken = default) =>
+    public new async Task<Result> Post<TRequestDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken = default) =>
         await base.Post(requestUri, value, cancellationToken);
 
-    public async Task<Result<TResponseDto>> Post<TRequestDto, TResponseDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken = default) =>
+    public new async Task<Result<TResponseDto>> Post<TRequestDto, TResponseDto>(string requestUri, TRequestDto value, CancellationToken cancellationToken = default) =>
         await base.Post<TRequestDto, TResponseDto>(requestUri, value, cancellationToken);
 }
 

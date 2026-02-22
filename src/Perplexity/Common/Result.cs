@@ -40,7 +40,7 @@ public class Result : IResult
             (
                 await RawApiRequest.Create(response, cancellationToken),
                 RawApiResponse.Create(response, content),
-                PerplexityApiError.Create(exception)
+                PerplexityApiError.Create(response.StatusCode, content, exception)
             );
         }
     }

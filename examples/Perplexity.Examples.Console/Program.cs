@@ -3,6 +3,7 @@ using Perplexity.Chat.Dtos;
 
 Console.WriteLine("Perplexity Console Example");
 Console.WriteLine();
+
 var perplexityClient = new PerplexityClient();
 var chatClient = perplexityClient.ChatClient;
 var request = new CreateChatCompletionRequest
@@ -32,4 +33,10 @@ if (response.IsSuccess)
 else
 {
     Console.WriteLine("FAILED");
+    if (response.Error is not null)
+    {
+        Console.WriteLine($"Error code: {response.Error.Code}");
+        Console.WriteLine($"Error type: {response.Error.Type}");
+        Console.WriteLine($"Error message: {response.Error.Message}");
+    }
 }
