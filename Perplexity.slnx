@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/_/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/examples/">
