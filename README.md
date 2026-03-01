@@ -2,8 +2,13 @@
 
 An unofficial .NET client library for the Perplexity API, providing a simple and idiomatic way to integrate Perplexity’s AI capabilities into .NET applications.
 
+### Disclaimer
+
+This project is **not affiliated with, endorsed by, or related to Perplexity AI, Inc.** or any of its subsidiaries. "Perplexity" and related names and marks are trademarks of their respective owners. This is an independent, unofficial library created for developer convenience. Use of the Perplexity name and API is for descriptive purposes only and does not imply any endorsement or permission from the trademark holder.
+
 ## Table of Contents
 
+- [Disclaimer](#disclaimer)
 - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Install the NuGet package](#install-the-nuget-package)
