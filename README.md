@@ -454,5 +454,5 @@ catch (PerplexityClientException ex)
 
 This project is licensed under the MIT License.
 
-[![nuget version](https://img.shields.io/nuget/v/Perplexity.Unofficial)](https://www.nuget.org/packages/perplexity-dotnet-unofficial)
-[![nuget downloads](https://img.shields.io/nuget/dt/Perplexity.Unofficial.svg)](https://www.nuget.org/packages/perplexity-dotnet-unofficial)
+[![nuget version](https://img.shields.io/nuget/v/Perplexity.Unofficial)](https://www.nuget.org/packages/Perplexity.Unofficial)
+[![nuget downloads](https://img.shields.io/nuget/dt/Perplexity.Unofficial.svg)](https://www.nuget.org/packages/Perplexity.Unofficial)
