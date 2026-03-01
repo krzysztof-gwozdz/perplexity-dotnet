@@ -1,9 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0;</TargetFrameworks>
+        <LangVersion>default</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="Polyfills\IsExternalInit.cs" />
+        <Compile Remove="Polyfills\MemberNotNullWhenAttribute.cs" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'">
+        <Compile Include="Polyfills\IsExternalInit.cs" />
+        <Compile Include="Polyfills\MemberNotNullWhenAttribute.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="System.Net.Http.Json" Version="10.0.3" />
+      <PackageReference Include="System.Text.Json" Version="10.0.3" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+      <PackageReference Include="System.Net.Http.Json" Version="10.0.3" />
+      <PackageReference Include="System.Text.Json" Version="10.0.3" />
+    </ItemGroup>
 
 </Project>

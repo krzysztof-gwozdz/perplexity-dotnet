@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Perplexity.Common.Dtos;
 
@@ -24,7 +24,7 @@ public class Result<TDto> : IResult
 
     public static async Task<Result<TDto>> Success(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        var content = await response.Content.ReadAsStringAsync();
         var dto = JsonSerializer.Deserialize<TDto>(content) ?? throw new JsonException($"Failed to deserialize response to {typeof(TDto).Name}");
         return new(
             await RawApiRequest.Create(response, cancellationToken),
@@ -35,7 +35,7 @@ public class Result<TDto> : IResult
 
     public static async Task<Result<TDto>> Fail(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        var content = await response.Content.ReadAsStringAsync();
         try
         {
             var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");

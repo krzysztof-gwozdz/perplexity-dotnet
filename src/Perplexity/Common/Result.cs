@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Perplexity.Common.Dtos;
 
 namespace Perplexity.Common;
@@ -23,7 +23,7 @@ public class Result : IResult
 
     public static async Task<Result> Fail(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        var content = await response.Content.ReadAsStringAsync();
         try
         {
             var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(content) ?? throw new JsonException($"Failed to deserialize response to {nameof(ErrorResponse)}");
