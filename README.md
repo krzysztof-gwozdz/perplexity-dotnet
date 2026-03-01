@@ -32,7 +32,19 @@ your API key somewhere safe and do not share it with anyone.
 
 ### Install the NuGet package
 
-🚧 Work in progress 🚧
+The library is distributed as a NuGet package **Perplexity.Unofficial**.
+
+**Using the .NET CLI:**
+
+```bash
+dotnet add package Perplexity.Unofficial
+```
+
+**Using the Package Manager Console (Visual Studio):**
+
+```powershell
+Install-Package Perplexity.Unofficial
+```
 
 ## Using the client library
 
