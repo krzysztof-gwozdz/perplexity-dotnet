@@ -1,4 +1,5 @@
 using Perplexity;
+using Perplexity.Chat;
 using Perplexity.Chat.Dtos;
 
 Console.WriteLine("Perplexity Console Example");
@@ -8,7 +9,7 @@ var perplexityClient = new PerplexityClient();
 var chatClient = perplexityClient.ChatClient;
 var request = new CreateChatCompletionRequest
 {
-    Model = "sonar",
+    Model = ChatCompletionModels.Sonar,
     Messages =
     [
         Message.CreateUserMessage("Hello, how are you?")

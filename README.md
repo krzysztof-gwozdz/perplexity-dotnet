@@ -60,7 +60,7 @@ var chatClient = client.ChatClient;
 
 var request = new CreateChatCompletionRequest
 {
-    Model = "sonar",
+    Model = ChatCompletionModels.Sonar,
     Messages = [Message.CreateUserMessage("Hello, how are you?")]
 };
 
@@ -117,8 +117,8 @@ var response = await chatClient.CreateChatCompletion(request);
 
 ## Chat completions endpoints
 
-Chat completions allow you to have conversations with Perplexity's models. The API supports various models including
-`sonar`, `sonar-pro`, and others.
+Chat completions allow you to have conversations with Perplexity's models. The API supports various models; use
+`ChatCompletionModels` in `Perplexity.Chat.Dtos` for the documented Sonar model ids (for example `Sonar`, `SonarPro`).
 
 ### Basic chat completion
 
@@ -131,7 +131,7 @@ var chatClient = client.ChatClient;
 
 var request = new CreateChatCompletionRequest
 {
-    Model = "sonar",
+    Model = ChatCompletionModels.Sonar,
     Messages =
     [
         Message.CreateUserMessage("What is the capital of France?")
@@ -175,7 +175,7 @@ var messages = new List<Message>
 
 var request = new CreateChatCompletionRequest
 {
-    Model = "sonar",
+    Model = ChatCompletionModels.Sonar,
     Messages = messages
 };
 
@@ -191,7 +191,7 @@ if (response.IsSuccess)
     
     var followUpRequest = new CreateChatCompletionRequest
     {
-        Model = "sonar",
+        Model = ChatCompletionModels.Sonar,
         Messages = messages
     };
     
@@ -214,7 +214,7 @@ var chatClient = client.ChatClient;
 
 var asyncRequest = new CreateAsyncChatCompletionRequest
 {
-    Model = "sonar",
+    Model = ChatCompletionModels.Sonar,
     Messages = [Message.CreateUserMessage("Tell me about quantum computing")]
 };
 
@@ -309,7 +309,7 @@ var embeddingsClient = client.EmbeddingsClient;
 var request = new EmbeddingsRequest
 {
     Input = ["Hello, world"],
-    Model = "pplx-embed-v1-0.6b"
+    Model = EmbeddingModels.PplxEmbedV1_0_6b
 };
 
 var response = await embeddingsClient.CreateEmbeddings(request);
@@ -343,7 +343,7 @@ var request = new ContextualizedEmbeddingsRequest
     [
         ["First chunk of document A", "Second chunk of document A"]
     ],
-    Model = "pplx-embed-context-v1-0.6b"
+    Model = ContextualizedEmbeddingModels.PplxEmbedContextV1_0_6b
 };
 
 var response = await embeddingsClient.CreateContextualizedEmbeddings(request);
@@ -372,7 +372,7 @@ var agenticResearchClient = client.AgenticResearchClient;
 
 var request = new AgenticResearchRequest
 {
-    Model = "sonar-pro",
+    Model = AgenticResearchModels.PerplexitySonar,
     Input = new InputItem[]
     {
         new InputMessage { Role = "user", Content = "What are the latest developments in quantum computing?" }
@@ -402,7 +402,7 @@ var agenticResearchClient = client.AgenticResearchClient;
 
 var requestWithTools = new AgenticResearchRequest
 {
-    Model = "sonar-pro",
+    Model = AgenticResearchModels.PerplexitySonar,
     Input = new InputItem[]
     {
         new InputMessage { Role = "user", Content = "Research the best practices for API design" }

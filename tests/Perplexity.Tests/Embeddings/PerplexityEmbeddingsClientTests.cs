@@ -14,7 +14,7 @@ public class PerplexityEmbeddingsClientTests
         var request = new EmbeddingsRequest
         {
             Input = ["hello world"],
-            Model = "pplx-embed-v1-0.6b"
+            Model = EmbeddingModels.PplxEmbedV1_0_6b
         };
 
         var result = await embeddingsClient.CreateEmbeddings(request);
@@ -58,7 +58,7 @@ public class PerplexityEmbeddingsClientTests
         var request = new EmbeddingsRequest
         {
             Input = ["dimension test"],
-            Model = "pplx-embed-v1-0.6b",
+            Model = EmbeddingModels.PplxEmbedV1_0_6b,
             Dimensions = dimensions
         };
 
@@ -84,7 +84,7 @@ public class PerplexityEmbeddingsClientTests
             [
                 ["intro paragraph", "body paragraph"]
             ],
-            Model = "pplx-embed-context-v1-0.6b"
+            Model = ContextualizedEmbeddingModels.PplxEmbedContextV1_0_6b
         };
 
         var result = await embeddingsClient.CreateContextualizedEmbeddings(request);
@@ -126,7 +126,7 @@ public class PerplexityEmbeddingsClientTests
         var request = new ContextualizedEmbeddingsRequest
         {
             Input = [["single chunk"]],
-            Model = "pplx-embed-context-v1-0.6b",
+            Model = ContextualizedEmbeddingModels.PplxEmbedContextV1_0_6b,
             Dimensions = dimensions
         };
 

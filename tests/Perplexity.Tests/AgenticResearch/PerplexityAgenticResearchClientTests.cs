@@ -1,4 +1,5 @@
 using System.Net;
+using Perplexity.AgenticResearch;
 using Perplexity.AgenticResearch.Dtos;
 using Perplexity.Common;
 
@@ -6,8 +7,6 @@ namespace Perplexity.Tests.AgenticResearch;
 
 public class PerplexityAgenticResearchClientTests
 {
-    private const string Model = "perplexity/sonar";
-
     [Fact]
     public async Task CreateResponse_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
@@ -17,7 +16,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What is the capital of France?",
-            Model = Model
+            Model = AgenticResearchModels.PerplexitySonar
         };
 
         // act
@@ -37,7 +36,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What year was the Eiffel Tower built?",
-            Model = Model
+            Model = AgenticResearchModels.PerplexitySonar
         };
 
         // act
@@ -60,7 +59,7 @@ public class PerplexityAgenticResearchClientTests
             {
                 new InputMessage { Role = "user", Content = "What is the largest ocean on Earth?" }
             },
-            Model = Model
+            Model = AgenticResearchModels.PerplexitySonar
         };
 
         // act
@@ -85,7 +84,7 @@ public class PerplexityAgenticResearchClientTests
                 new InputMessage { Role = "assistant", Content = "The speed of light is approximately 299,792,458 meters per second." },
                 new InputMessage { Role = "user", Content = "How long does it take light to travel from the Sun to Earth?" }
             },
-            Model = Model
+            Model = AgenticResearchModels.PerplexitySonar
         };
 
         // act
@@ -105,7 +104,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What are the benefits of exercise?",
-            Model = Model,
+            Model = AgenticResearchModels.PerplexitySonar,
             Instructions = "Answer in exactly one sentence."
         };
 
@@ -126,7 +125,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "Explain quantum computing",
-            Model = Model,
+            Model = AgenticResearchModels.PerplexitySonar,
             MaxOutputTokens = 200
         };
 
@@ -147,7 +146,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What are the latest developments in fusion energy?",
-            Model = Model,
+            Model = AgenticResearchModels.PerplexitySonar,
             Tools =
             [
                 new WebSearchTool
@@ -188,7 +187,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What is the weather like today?",
-            Model = Model,
+            Model = AgenticResearchModels.PerplexitySonar,
             Tools =
             [
                 new WebSearchTool
@@ -220,7 +219,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = "What is the population of Tokyo?",
-            Model = Model,
+            Model = AgenticResearchModels.PerplexitySonar,
             Instructions = "Be concise.",
             MaxOutputTokens = 200,
             MaxSteps = 2,
@@ -261,7 +260,7 @@ public class PerplexityAgenticResearchClientTests
         var request = new AgenticResearchRequest
         {
             Input = input,
-            Model = Model
+            Model = AgenticResearchModels.PerplexitySonar
         };
 
         // act

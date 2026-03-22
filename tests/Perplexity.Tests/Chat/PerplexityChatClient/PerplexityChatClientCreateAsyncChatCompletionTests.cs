@@ -1,4 +1,5 @@
 using System.Net;
+using Perplexity.Chat;
 using Perplexity.Chat.Dtos;
 using Perplexity.Common;
 
@@ -6,16 +7,13 @@ namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
 public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChatClientTestsBase
 {
-    private const string Model = "sonar-deep-research";
-    private const string ReasoningModel = "sonar-reasoning-pro";
-
     [Fact]
     public async Task CreateAsyncChatCompletion_WithOnlyRequiredFields_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateSystemMessage("Response with pong for ping request"),
@@ -36,7 +34,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateSystemMessage("Response with pong for ping request"),
@@ -61,7 +59,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What is the capital of France?")
@@ -83,7 +81,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What are the latest news in technology?")
@@ -105,7 +103,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What happened in technology in 2024?")
@@ -130,7 +128,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What is the Eiffel Tower?")
@@ -152,7 +150,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateSystemMessage("You are a helpful assistant."),
@@ -177,7 +175,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What are the benefits of exercise?")
@@ -199,7 +197,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("Tell me about recent AI developments.")
@@ -224,7 +222,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("Show me some famous paintings.")
@@ -246,7 +244,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("How does photosynthesis work?")
@@ -268,7 +266,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What is the capital of Germany?")
@@ -290,7 +288,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("Tell me a fun fact.")
@@ -315,7 +313,7 @@ public class PerplexityChatClientCreateAsyncChatCompletionTests : PerplexityChat
         // arrange
         var request = new CreateAsyncChatCompletionRequest
         {
-            Model = ReasoningModel,
+            Model = ChatCompletionModels.SonarDeepResearch,
             Messages =
             [
                 Message.CreateUserMessage("What is 15 * 17?")

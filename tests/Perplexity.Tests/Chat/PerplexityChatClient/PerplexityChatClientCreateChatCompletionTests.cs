@@ -1,4 +1,5 @@
 using System.Net;
+using Perplexity.Chat;
 using Perplexity.Chat.Dtos;
 using Perplexity.Common;
 
@@ -6,16 +7,13 @@ namespace Perplexity.Tests.Chat.PerplexityChatClient;
 
 public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClientTestsBase
 {
-    private const string Model = "sonar";
-    private const string ReasoningModel = "sonar-reasoning-pro";
-
     [Fact]
     public async Task CreateChatCompletion_WithTextMessage_ReturnsValidResponseWithRequiredData()
     {
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("Response with pong for ping request"),
@@ -36,7 +34,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("Response with pong for ping request"),
@@ -57,7 +55,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
     {
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage(
@@ -82,7 +80,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("What do you see on the image?"),
@@ -104,7 +102,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("What do you see on the video?"),
@@ -126,7 +124,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("Describe the content of this file in one sentence."),
@@ -147,7 +145,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
     {
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("Describe the content of this file in."),
@@ -169,7 +167,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("Response with pong for ping request"),
@@ -193,7 +191,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What is the capital of France?")
@@ -215,7 +213,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What are the latest news in technology?")
@@ -237,7 +235,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What happened in technology in 2024?")
@@ -262,7 +260,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What is the Eiffel Tower?")
@@ -284,7 +282,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateSystemMessage("You are a helpful assistant."),
@@ -309,7 +307,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What are the benefits of exercise?")
@@ -331,7 +329,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("Tell me about recent AI developments.")
@@ -356,7 +354,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("Show me some famous paintings.")
@@ -378,7 +376,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("How does photosynthesis work?")
@@ -400,7 +398,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("What is the capital of Germany?")
@@ -422,7 +420,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = Model,
+            Model = ChatCompletionModels.Sonar,
             Messages =
             [
                 Message.CreateUserMessage("Tell me a fun fact.")
@@ -447,7 +445,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         // arrange
         var request = new CreateChatCompletionRequest
         {
-            Model = ReasoningModel,
+            Model = ChatCompletionModels.SonarReasoningPro,
             Messages =
             [
                 Message.CreateUserMessage("What is 15 * 17?")
@@ -460,7 +458,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
         var response = await ChatClient.CreateChatCompletion(request);
 
         // assert
-        ValidateSuccessfulResult(response, ReasoningModel);
+        ValidateSuccessfulResult(response, ChatCompletionModels.SonarReasoningPro);
     }
 
     [Theory]
@@ -505,7 +503,7 @@ public class PerplexityChatClientCreateChatCompletionTests : PerplexityChatClien
     }
 
     private void ValidateSuccessfulResult(Result<CreateChatCompletionResponse> result) =>
-        ValidateSuccessfulResult(result, Model);
+        ValidateSuccessfulResult(result, ChatCompletionModels.Sonar);
 
     private void ValidateSuccessfulResult(Result<CreateChatCompletionResponse> result, string expectedModel)
     {
