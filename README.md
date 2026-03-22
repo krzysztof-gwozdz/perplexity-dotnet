@@ -17,6 +17,7 @@ This project is **not affiliated with, endorsed by, or related to Perplexity AI,
     - [Using the async API](#using-the-async-api)
 - [Chat completions endpoints](#chat-completions-endpoints)
 - [Search endpoints](#search-endpoints)
+- [Embeddings endpoints](#embeddings-endpoints)
 - [Agentic research endpoints](#agentic-research-endpoints)
 - [Authentication endpoints](#authentication-endpoints)
 - [Error handling](#error-handling)
@@ -86,6 +87,7 @@ corresponding client interface and implementation.
 |------------------------------|------------------------------------|-----------------------------------|
 | `Perplexity.Chat`            | `IPerplexityChatClient`            | `PerplexityChatClient`            |
 | `Perplexity.Search`          | `IPerplexitySearchClient`          | `PerplexitySearchClient`          |
+| `Perplexity.Embeddings`      | `IPerplexityEmbeddingsClient`      | `PerplexityEmbeddingsClient`      |
 | `Perplexity.AgenticResearch` | `IPerplexityAgenticResearchClient` | `PerplexityAgenticResearchClient` |
 | `Perplexity.Authentication`  | `IPerplexityAuthenticationClient`  | `PerplexityAuthenticationClient`  |
 
@@ -99,6 +101,7 @@ var client = new PerplexityClient(Environment.GetEnvironmentVariable("PERPLEXITY
 // Access individual clients
 var chatClient = client.ChatClient;
 var searchClient = client.SearchClient;
+var embeddingsClient = client.EmbeddingsClient;
 var agenticResearchClient = client.AgenticResearchClient;
 var authenticationClient = client.AuthenticationClient;
 ```
@@ -289,6 +292,71 @@ var advancedSearchRequest = new SearchRequest
 
 var response = await searchClient.Search(advancedSearchRequest);
 // Process results...
+```
+
+## Embeddings endpoints
+
+The [Embeddings API](https://docs.perplexity.ai/api-reference/embeddings-post) returns vectors as base64-encoded int8 values by default. The request `input` field is modeled as a list of strings; pass a single text as a one-element array.
+
+```C# Snippet:ReadMe_Embeddings_Basic
+using Perplexity;
+using Perplexity.Embeddings;
+using Perplexity.Embeddings.Dtos;
+
+var client = new PerplexityClient(Environment.GetEnvironmentVariable("PERPLEXITY_API_KEY"));
+var embeddingsClient = client.EmbeddingsClient;
+
+var request = new EmbeddingsRequest
+{
+    Input = ["Hello, world"],
+    Model = "pplx-embed-v1-0.6b"
+};
+
+var response = await embeddingsClient.CreateEmbeddings(request);
+if (response.IsSuccess)
+{
+    foreach (var item in response.Data.Data)
+    {
+        var vector = EmbeddingBase64.DecodeInt8(item.Embedding);
+        // vector is sbyte[] with one signed byte per dimension
+    }
+}
+```
+
+Optional fields include `dimensions` (Matryoshka output size) and `encoding_format` (`EmbeddingsEncodingFormat.Base64Int8` or `Base64Binary`).
+
+### Contextualized embeddings
+
+The [Contextualized Embeddings API](https://docs.perplexity.ai/api-reference/contextualized-embeddings-post) embeds document chunks with shared document-level context. Model `input` as a list of lists: each inner list is one document’s chunks.
+
+```C# Snippet:ReadMe_ContextualizedEmbeddings_Basic
+using Perplexity;
+using Perplexity.Embeddings;
+using Perplexity.Embeddings.Dtos;
+
+var client = new PerplexityClient(Environment.GetEnvironmentVariable("PERPLEXITY_API_KEY"));
+var embeddingsClient = client.EmbeddingsClient;
+
+var request = new ContextualizedEmbeddingsRequest
+{
+    Input =
+    [
+        ["First chunk of document A", "Second chunk of document A"]
+    ],
+    Model = "pplx-embed-context-v1-0.6b"
+};
+
+var response = await embeddingsClient.CreateContextualizedEmbeddings(request);
+if (response.IsSuccess)
+{
+    foreach (var doc in response.Data.Data)
+    {
+        foreach (var chunk in doc.Data)
+        {
+            var vector = EmbeddingBase64.DecodeInt8(chunk.Embedding);
+        }
+    }
+}
 ```
 
 ## Agentic research endpoints
